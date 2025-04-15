@@ -1,0 +1,41 @@
+
+<!--ul class="people_list">
+  {{#each people}}
+    <li>{{this}}</li>
+  {{/each}}
+</ul-->
+{{!-- <h1>{{users}}</h1> --}}
+<div class="mt-4">
+  
+       <h2>Sign In</h2>
+       <form method="POST"action="/signin">
+            <div style="margin:auto; display:flex; flex-direction: column">
+               
+                 {{!-- thieu thuoc tinh name thi submit ra chuoi rong, form khong co du lieu --}}
+                    <input 
+                    type="text"
+                    class="form-control"
+                    placeholder="Username"
+                    id ="account"
+                    name="account"
+                />  
+       
+                    <input 
+                    style="margin: 10px 0;"
+                    type="text"
+                    class="form-control"
+                    placeholder="Password"
+                    name="password"
+                    id="password"
+                    />
+   
+            </div>
+            <button
+            type="submit"
+            class="btn--home btn--signin"
+            >Sign In</button>
+                
+       </form>
+
+   
+</div>  

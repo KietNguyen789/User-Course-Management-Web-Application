@@ -1,0 +1,20 @@
+thư viện tải từ npm được đưa vào folder node_modules
+http://localhost:3000/search?q=f8%20lap%20trinh&ref=mycv&author=sondn
+# Middleware
+
+### Ý nghĩa
+- Phần mềm TRUNG GIAN (đứng giữa các thành phần trong mô hình phần mềm)
+ 
+ Browser (client) ======== Request ======> Server (Node)
+
+ Browser (client) <======= Response ====== Server (Node)
+
+ ### Vai trò
+-Giống như các bác bảo vệ (Validation, Không cho vào, Cho phép vào (sau khi Validation), Chỉnh sửa/thay đổi (đánh dấu, thay đổi cấu tạo))
+bác 1: bác 2: ...
+ ### Ứng dụng
+
+ Lỗi treo có thể do không next trong Middleware
+  - Dựng chức năng xác thực authentication
+  - Chức năng phân quyền authorization
+  - Để chia sẻ các giá trị của biến tới tất cả các view (BE)

@@ -1,0 +1,175 @@
+{{!-- hanh dong khong biet truoc Action la gi thi su dung POST --}}
+<form class="mt-4" name="container-form" method="POST" action="/users/handle-form-action">
+    {{!-- class cach top 1 doan  --}}
+    <h3>
+         Users List
+    </h3>
+    {{!-- {{#if deletedCount}} --}}
+    <a href="/me/trash/users">Trash ({{deletedCount}})</a>
+        {{!-- {{/if}} --}}
+       <div class="mt-4 d-flex align-items-center">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+                <label class="form-check-label" for="checkbox-all">
+                    Select All
+                </label>
+            </div>
+            <select class="form-control form-control-sm checkbox-select-all-options"  id="exampleFormControlSelect1" name="action" required>
+                <option value="">--- Select Action ---</option>
+                <option value="delete">Delete</option>
+        </select>
+        <button  class="btn btn-primary btn-sm check-all-submit-btn" disabled>Apply</button>
+       </div>
+        <table class="table mt-4">
+    <thead>
+        <tr>
+            <th scope="col" colspan="2">
+                ID
+                {{!-- no bi khong xoa duoc trong collection counter --}}
+                  {{{sortable '_id' _sort}}}
+            </th>
+             <th scope="col">
+                Họ Tên
+            {{{sortable 'name' _sort}}}
+            </th>
+            <th scope="col"> Tên Đăng Nhập</th>
+            <th scope="col" >Email   </th>
+            <th scope="col" >Số Điện Thoại </th>
+            <th scope="col" colspan="2">Quyền Hạn</th>
+                  
+            
+        </tr>
+    </thead>
+    <tbody>
+        
+       {{#each users}}
+        <tr>
+            <td>
+                 <div class="form-check">
+               
+                    <input class="form-check-input" type="checkbox" name="userIds[]" value="{{this._id}}" >
+                    {{!-- <label class="form-check-label" for="defaultCheck1"> --}}
+                </div>
+            </td>
+           
+            <th scope="row">{{this._id}}
+                
+            </th>
+             
+            <td>{{this.name}}</td>
+            <td>{{this.account}}</td>
+            <td>{{this.email}}</td>
+            <td>{{this.phone}}</td>
+            <td>{{this.roll}}</td>
+            <td>
+                {{!-- data-whatever ="{{this.?}}"
+                chay 1 hop thoai: data-toggle="modal" data-target="#delete-user-modal" co id la delete-user-modal --}}
+                <a href="/users/{{this._id}}/edit" class="btn btn-link">Modify</a>
+                <a href="" class="btn btn-link"data-toggle="modal" data-target="#delete-user-modal" data-id ="{{this._id}}">Delete</a>
+
+            </td>
+          
+        </tr>
+        {{else}}
+        <tr>
+            <td colspan="5" class="text-center">
+                You have not create any users yet!
+                <a href="/users/create">Create Users</a>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+    </table>
+</form>
+{{!-- --}}
+
+<div id="delete-user-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete User?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure? </p>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-delete-user" type="button" class="btn btn-danger">Delete</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancle</button>
+      </div>
+    </div>
+  </div>
+{{!-- delete hidden forms --}}
+ <form name="delete-user-form" method="POST" ></form>
+<script src="https://kit.fontawesome.com/6005cacf05.js" crossorigin="anonymous"></script>
+<script>
+  
+
+    document.addEventListener('DOMContentLoaded', function(){
+        //var camera = window.FontAwesome.icon({ prefix: 'fas', iconName: 'camera' })
+        var UserId;
+        var btnDeleteUser =  document.getElementById('btn-delete-user');
+        var deleteForm = document.forms['delete-user-form'];
+        // id: checkbox-all
+        var checkboxAll = $('#checkbox-all');
+        // the input co name = userIds[]
+        var userItemCheckbox= $('input[name="userIds[]"]');
+        // chon doi tuong class
+        var checkAllSubmitBtn = $('.check-all-submit-btn');
+        var containerForm = document.forms['container-form'];
+        // wait for dialog clicked
+           $('#delete-user-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            UserId = button.data('id') // Extract info from data-* attributes
+ 
+        });
+        console.log(containerForm);
+        // click delete btn exec this func
+        btnDeleteUser.onclick = function()
+            {
+                    deleteForm.action = '/users/' + UserId + '?_method=DELETE';
+                    deleteForm.submit();
+                // deleteForm.submit();
+            }
+       
+        checkboxAll.change(function() {
+            var isCheckAll = $(this).prop('checked');
+            userItemCheckbox.prop('checked', isCheckAll);
+             renderCheckAllSubmitBtn(); 
+           
+            //console.log($(this).prop('checked')); 
+
+        });
+    
+        // dang an(bootstrap) thi khong cho submit
+
+    
+      userItemCheckbox.change( function(){
+        // so sanh so luong check boxes co bang so box dang duoc check khong?
+            var isCheckAll= userItemCheckbox.length === $('input[name="userIds[]"]:checked').length;
+            checkboxAll.prop('checked', isCheckAll);
+            renderCheckAllSubmitBtn();
+      });
+
+      // re-render check all submit btn
+      function renderCheckAllSubmitBtn()
+      {
+            var checkedCount = $('input[name="userIds[]"]:checked').length;
+            if (checkedCount > 0)
+            {
+            
+                checkAllSubmitBtn.attr('disabled', false);
+            }
+            else
+            {
+                
+                checkAllSubmitBtn.attr('disabled', true);
+            }
+      }
+     
+    });
+ 
+
+</script>
